@@ -1,0 +1,155 @@
+// var data = '';
+//  var readStream = fs.createReadStream(tempFilePath);
+// readStream.setEncoding('utf8');
+// readStream.on('readable', function(chunk) {
+//   while ((chunk=readStream.read()) !== null) {
+//     data += chunk;
+//   }
+// });
+// readStream.on('end', function() {
+//   console.log(data);
+//
+// });
+//         return extract(tempFilePath, {splitPages: false},(err, text) => {
+//           if(err){
+//             console.log("Error: ", err)
+//             return
+//           }
+//           console.log(text);
+//         })
+// }).catch((err) =>{
+//   console.log(err);
+// });
+
+ // return fs.readFile(tempFilePath, (err, data) => {
+ //         if(err){
+ //           console.log("Error: ", err);
+ //         }
+ //         else{
+ //           console.log("BUFFER:", data);
+ //           new pdfReader.PdfReader().parseBuffer(data, (err, item) => {
+ //            if(item && item.text){
+ //                console.log("HALLÅ ÄR  DU HÄR!");
+ //                console.log(item.text);
+ //                fs.unlinkSync(tempFilePath);
+ //            }
+ //            else if(err){
+ //                console.log("Funkar inte");
+ //                console.log(err);
+ //                fs.unlinkSync(tempFilePath);
+ //                }
+ //            });
+ //
+ //         }
+ //       });
+ //
+ //
+ //   //});
+ // return null;
+ //   });//.then(() => {
+       //console.log("borta");
+     //  return fs.unlinkSync(tempFilePath);
+   //});
+
+   //
+   //
+   //const storageClient = gcs({
+      // projectId: "examensarbete-b0132",
+     //  keyFilename: './examensArbete-909fdb168049.json'
+   //});
+
+   //const pdfReader = require('pdfreader');
+
+
+   pdfParser.on("pdfParser_dataError", errData => console.error(errData.parserError) );
+   pdfParser.on("pdfParser_dataReady", pdfData => {
+       fs.writeFile(tempTextFilePath, pdfParser.getRawTextContent());
+       text = fs.readFileSync(tempTextFilePath, 'utf8');
+       console.log(text);
+   });
+
+   pdfParser.loadPDF(tempFilePath);
+
+   const tempTextFilePath = path.join(os.tmpdir(), 'tempCvTxtFile.txt');
+   console.log(tempTextFilePath);
+
+
+
+   console.log("FICKE: " + text2);
+
+   const tempTextFile = path.join(os.tmpdir(), 'tempCvTxtFile.txt');
+   const tempPath = path.join(path.dirname(filePath), 'cvText');
+
+   console.log(tempTextFile);
+
+
+         //return tempFilePath;
+       // }).then((text) => {
+       //    return admin.firestore().collection('cv').doc(uid).set({
+       //        cvText: text,
+       //        kaka: "ballerina"
+       //      });
+
+       //------TEST2------------------
+          //---------test
+
+          // var downloadFile = bucket.file(filePath).download({
+          //   destination: tempFilePath,
+          // });
+
+          // return Promise.resolve(downloadFile).then(() => {
+          //   console.log('PDF downloaded locally to', tempFilePath);
+          //   return pdfParser.loadPDF(tempFilePath);
+          // }).then(() => {
+
+          //   var text = [];
+          //   pdfParser.on("pdfParser_dataReady", pdfData => {
+          //         var test = pdfParser.getRawTextContent();
+          //         console.log("TEXTEN VA:" + test);
+          //         Promise.resolve(test).then(() => {
+          //           console.log("TEST; " + test)
+          //           return text.push(test);
+          //         }).catch((err) => console.log("prim: ", err));
+          //     });
+          //   return Promise.all(text).then((result) => {
+          //
+          //     return result[0];
+          //   });
+          // }).then((text) => {
+          //   return console.log("TEXT: " + text);
+          // });
+
+          //---------test
+          //------------------_FUNKAR--------------------
+          // return bucket.file(filePath).download({
+          //   destination: tempFilePath,
+          // }).then(() => {
+          //   console.log('PDF downloaded locally to', tempFilePath);
+          //   return pdfParser.loadPDF(tempFilePath);
+          // }).then(() => {
+          //   var text = "WHAT?";
+          //   pdfParser.on("pdfParser_dataError", errData => console.error(errData.parserError) );
+          //   var kaka = pdfParser.on("pdfParser_dataReady", pdfData => {
+          //       var test = pdfParser.getRawTextContent();
+          //       console.log("TEXTEN VA:" + test);
+          //       Promise.resolve(test).then((tex) => {
+          //         console.log("promise " + tex)
+          //         return admin.firestore().collection('cv').doc(uid).set({
+          //               cvText: tex,
+          //               kaka: "KAKTUS"
+          //             });
+          //       }).catch((err) => {
+          //         console.log(err)
+          //       });
+          //   });
+          //
+          // return text
+          //   }).then((test) => {
+          //   return admin.firestore().collection('cv').doc(uid).update({
+          //         kaka: "Done"
+          //       });
+          // }).then(() => {
+          //    console.log("borta");
+          //    return fs.unlinkSync(tempFilePath);
+          // });
+          //------------------_FUNKAR--------------------
