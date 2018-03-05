@@ -19,14 +19,14 @@ exports.extractTextFromCvPdf = functions.storage.object().onChange((event) => {
     const dirPath = filePath.split(path.sep);
     const uid = dirPath[1];
 
-    if(fileName.indexOf('CV_') > -1){
-       console.log('File already exists');
-        return null;
+    if(contentType.indexOf('application/pdf') === -1){
+      console.log('This is not a pdf');
+      return null;
     }
 
     if (resourceState === 'not_exists') {
-        console.log('This is a deletion event.');
-        return null;
+      console.log('This is a deletion event.');
+      return null;
     }
 
     const bucket = gcs.bucket(fileBucket);
@@ -43,10 +43,25 @@ exports.extractTextFromCvPdf = functions.storage.object().onChange((event) => {
         let pdfParser = new PDFParser(this,1);
         pdfParser.loadPDF(tempFilePath);
         pdfParser.on("pdfParser_dataReady", pdfData => {
-          var test = pdfParser.getRawTextContent();
-          resolve(test)
+          let text = pdfParser.getRawTextContent();
+          resolve(text);
         });
         pdfParser.on("pdfParser_dataError", errData => reject(errData.parserError));
+      });
+    };
+
+    let addTextToCvCollection = function(text) {
+      return new Promise((resolve, reject) => {
+        resolve(admin.firestore().collection('cv').doc(uid).set({
+          cvText: text,
+          uid: uid
+        }));
+      });
+    };
+
+    let removeFromTempFilePath = function() {
+      return new Promise((resolve, reject) => {
+        resolve(fs.unlinkSync(tempFilePath));
       });
     };
 
@@ -55,13 +70,12 @@ exports.extractTextFromCvPdf = functions.storage.object().onChange((event) => {
       return extractTextFromPdf();
     }).then((text) => {
       console.log("Text extracted from " + fileName);
-      return admin.firestore().collection('cv').doc(uid).set({
-        cvText: text,
-        uid: uid
-      });
+      return addTextToCvCollection(text);
     }).then(() => {
-      console.log(fileName + "removed from temp");
-      return fs.unlinkSync(tempFilePath);
+      console.log("Text added to collection");
+      return removeFromTempFilePath();
+    }).then(() => {
+      return console.log(fileName + " removed from /tmp");
     }).catch((reject) => {
       console.log(reject);
     });
